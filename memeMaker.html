@@ -139,24 +139,20 @@
      
 
     <script>
+      // --- DOM references (IDs) ---
 
-        // --- DOM references (IDs) ---
+      const memeForm = document.getElementById("memeForm"); // Select this element by ID (memeForm)
 
-        const memeForm   // Select this element by ID (memeForm)
+      const imgUrl = document.getElementById("imgUrl"); // Select this element with querySelector (imgUrl)
 
-        const imgUrl     // Select this element with querySelector (imgUrl)
+      const topText = document.getElementById("topText"); // Select this element with querySelectorAll and then accessing the first element (topText);
 
-        const topText    // Select this element with querySelectorAll and then accessing the first element (topText);
+      const bottomText = document.getElementById("bottomText"); // Select this element by ID (bottomText);
 
-        const bottomText // Select this element by ID (bottomText);
+      const formMsg = document.getElementById("formMsg"); // Select this element with querySelector (formMsg);
 
-        const formMsg    // Select this element with querySelector (formMsg);
-
-        const gallery    // Select this element by class name and selecting the first element (gallery-div)
-
-
-
-        /**
+      const gallery = document.querySelector(".gallery-div"); // Select this element by class name and selecting the first element (gallery-div)
+      /**
 
          * makeMemeCard
 
@@ -166,27 +162,24 @@
 
          */
 
-        function makeMemeCard(url, top, bottom) {
+      function makeMemeCard(url, top, bottom) {
+        const col = document.createElement("div");
 
-            const col = document.createElement('div');
+        col.className = "col-12 col-md-4";
 
-            col.className = 'col-12 col-md-4';
+        const card = document.createElement("div");
 
+        card.className = "card meme"; // “meme” class used later (Assign 2/3)
 
-
-            const card = document.createElement('div');
-
-            card.className = 'card meme'; // “meme” class used later (Assign 2/3)
-
-            card.innerHTML = `
+        card.innerHTML = `
 
         <div class="meme-wrap">
 
           <img class="img-fluid rounded" src="${url}" alt="meme image" />
 
-          <div class="meme-text top">${top || ''}</div>
+          <div class="meme-text top">${top || ""}</div>
 
-          <div class="meme-text bottom">${bottom || ''}</div>
+          <div class="meme-text bottom">${bottom || ""}</div>
 
           <!-- Assign 3 will wire this delete button via event delegation -->
 
@@ -198,17 +191,37 @@
 
       `;
 
-            col.append(card);
+        col.append(card);
 
-            return col;
+        return col;
+      }
 
+      // --- Assign 1 behavior: validate + create/insert card ---
+
+      memeForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const imgUrlData = imgUrl.value.trim();
+        const topTextData = topText.value.trim();
+        const bottomTextData = bottomText.value.trim();
+
+        if (imgUrlData == "") {
+          formMsg.textContent = "Please provide an image URL";
+          formMsg.classList.append("text-danger");
+          formMsg.classList.remove("text-success");
+        } else {
+          formMsg.textContent = "Meme added";
+          formMsg.classList.add("text-success");
+          formMsg.classList.remove("text-danger");
+
+          const newMeme = makeMemeCard(imgUrlData, topTextData, bottomTextData);
+          gallery.prepend(newMeme);
+
+          memeForm.reset();
         }
+      });
 
-
-
-        // --- Assign 1 behavior: validate + create/insert card ---
-
-        /*
+      /*
 
         *     1. Add an event listener for the form being submitted
 
